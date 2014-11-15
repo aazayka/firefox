@@ -9,16 +9,17 @@ let selection = require("sdk/selection");
 var panel = require("sdk/panel").Panel({
   width: 500,
   height: 400,
-  contentScript: "self.port.on('panelContent', function(data){document.body.innerHTML = data;});"
+  contentScript: "self.port.on('panelContent', function(data){document.body.innerHTML = data;});",
+  contentStyleFile: self.data.url("styles.css")
 });
 
-var translatedText; 
+var translatedText;
+var generatedHTML; 
 
 function ShowPanel(message) {
-        panel.port.emit('panelContent', '<h2 style="font-size:12pt;">' + translatedText + '</h2><span style="font-size: 10pt;' + message + '</span>');
+        panel.port.emit('panelContent', '<h2 style="font-size:12pt;">' + translatedText + '</h2><span style="font-size: 10pt;">' + message + '</span>');
         panel.show();
 }
-
 
 function Translate() {
 translatedText = selection.text;
@@ -27,7 +28,7 @@ if (translatedText) {
 	var pageWorkers = require("sdk/page-worker");
 	   pageWorkers.Page({
 		  contentURL: "http://slovari.yandex.ru/"+translatedText+"/en-ru/",
-		  contentScriptFile: self.data.url("parse_translated.js"),
+		  contentScriptFile: data.url("parse_translated.js"),
 		  contentScriptWhen: "ready",
 		  onMessage: ShowPanel
 		  });

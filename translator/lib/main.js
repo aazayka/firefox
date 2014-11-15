@@ -19,22 +19,6 @@ function ShowPanel(message) {
         panel.show();
 }
 
-var generateHTML = "var translated = document.querySelector('.b-translation__card');" +
-"if (translated == null) {" +
-"  // Это фраза" +
-"  var translationFull = document.querySelector('.b-translation__fulltext');" +
-"  if (translationFull == null) {" +
-"    generatedHTML = '<h2>That is a shame</h2>';" +
-"  } else {" +
-"    generatedHTML = document.querySelector('.b-translation__fulltext').innerHTML;" +
-"  }" +
-"} else {" +
-"  // Это карточка" +
-"  var translationGroups = document.querySelectorAll('.b-translation__group');" +
-"  for (var i = 0; i < translationGroups.length; ++i) {" +
-"    generatedHTML += translationGroups[i].innerHTML;" +
-"  }" +  
-"}";
 
 function Translate() {
 translatedText = selection.text;
@@ -43,7 +27,7 @@ if (translatedText) {
 	var pageWorkers = require("sdk/page-worker");
 	   pageWorkers.Page({
 		  contentURL: "http://slovari.yandex.ru/"+translatedText+"/en-ru/",
-		  contentScript: "try {var generatedHTML; " + generateHTML + " self.postMessage(generatedHTML);} catch(e) {self.postMessage('<h2>Нихрена не найдено</h2>');}",
+		  contentScriptFile: self.data.url("parse_translated.js"),
 		  contentScriptWhen: "ready",
 		  onMessage: ShowPanel
 		  });

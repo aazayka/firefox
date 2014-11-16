@@ -1,7 +1,6 @@
 var self = require("sdk/self");
 var contextMenu = require("sdk/context-menu");
-var tabs = require("sdk/tabs");
-tabs.open("https://yahoo.com/");
+//var tabs = require("sdk/tabs");
 
 var data = require("sdk/self").data;
 let selection = require("sdk/selection");
@@ -10,7 +9,6 @@ var panel = require("sdk/panel").Panel({
   width: 500,
   height: 400,
   contentScript: "self.port.on('panelContent', function(data){document.body.innerHTML = data;});",
-  contentStyleFile: self.data.url("styles.css")
 });
 
 var translatedText;
@@ -23,7 +21,6 @@ function ShowPanel(message) {
 
 function Translate() {
 translatedText = selection.text;
-console.log("http://slovari.yandex.ru/"+translatedText+"/en-ru/");
 if (translatedText) {
 	var pageWorkers = require("sdk/page-worker");
 	   pageWorkers.Page({
@@ -42,7 +39,7 @@ var cm = require("sdk/context-menu");
 cm.Item({
   label: "Перевести Яндексом",
   context: cm.SelectionContext(),
-  image: "http://slovari.yandex.ru/favicon.ico",
+  image: data.url("ys.ico"),
   contentScript: 'self.on("click", self.postMessage);',
   onMessage: Translate
 });
